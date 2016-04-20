@@ -129,7 +129,77 @@ Promise results are the resource(s) returned by a successful response - an array
 
 ## Pagination
 
-If a function is said to be supporting pagination, then that function can be used in many ways as shown below. Results from the function are arranged in [pages](https://developers.digitalocean.com/documentation/v2/#links).
+Although the DigitalOcean API returns results from query endpoints in [pages](https://developers.digitalocean.com/documentation/v2/#links), this client abstracts that notion by lazily fetching subsequent pages when they are needed. This allows developers to easily handles fetching large lists of resources without having to manually paginate results and perform subsequent requests - adding a layer of convenience on top of what is a common limitation in REST based APIs. An example of using this is:
+
+```js
+client.droplets.list(function(err, droplets) {
+  if (err) {
+    return console.error('Error fetching pages', err);
+  }
+
+  for (var droplet of droplets) {
+    console.log(droplet); // all droplets on account
+  }
+
+  // If you're in an environment that doesn't support iterators, look at polyfilling [Symbol.iterator](https://www.npmjs.com/package/es6-symbol), or try it old school:
+  var iterator = dropletIterator.iterator();
+  var iterable = iterator.next();
+  while(!iterable.done) {
+    console.log(iterable.value);
+    iterator.next();
+  }
+
+  // Regardless of iteration method, should check the error afterwards:
+  var error = iterator.error()
+  if (error) {
+    console.log(error);
+  }
+});
+```
+
+If you're in an environment that doesn't support iterators, look at polyfilling [Symbol.iterator](https://www.npmjs.com/package/es6-symbol), or try it old school:
+
+```js
+client.droplets.list(function(err, droplets) {
+  if (err) {
+    return console.error('Error fetching pages', err);
+  }
+
+  var iterator = droplets.iterator();
+  var iterable = iterator.next();
+  while(!iterable.done) {
+    console.log(iterable.value);
+    iterator.next();
+  }
+
+  // Check the error afterwards:
+  var error = iterator.error()
+  if (error) {
+    console.log(error);
+  }
+});
+```
+
+Note that the magic `.length` property on dropletIterator is tied to the first page of results.
+
+```js
+client.droplets.list(function(err, droplets) {
+  if (err) {
+    return console.error('Error fetching pages', err);
+  }
+
+  // Limited to original page only:
+  for (var i = 0, len = dropletIterator.length; i < len; i++) {
+    console.log(dropletIterator[i]);
+  }
+});
+```
+
+
+
+
+
+If a function declares pagination parameters, then results from the function are arranged in [pages](https://developers.digitalocean.com/documentation/v2/#links). These arguments are:
 
 The `page` argument is optional and is used to specify which page of objects to retrieve.
 The `perPage` argument is also optional and is used to specify how many objects per page.
@@ -177,12 +247,12 @@ function getAllDroplets(callback, page, array) {
     if (!err && isLastPage) {
       callback.call(this, array);
     } else if (!err && !isLastPage) {
-      listPagesUntilDone(page + 1, callback, array);
+      getAllDroplets(callback, page + 1, array);
     } else {
       // whoops, try again
-      listPagesUntilDone(page, callback, array);
+      getAllDroplets(callback, page, array);
     }
-  })
+  });
 };
 ```
 
