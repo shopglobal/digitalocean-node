@@ -39,7 +39,7 @@ client.droplets.list().then(function(droplets) {
   var droplet = droplets[0];
   return client.droplets.snapshot(droplet.id);
 }).then(function() {
-  console.log("created a snapshot of a Droplet!");
+  console.log("creating a snapshot of a Droplet!");
 }).catch(function(err) {
   // Deal with an error
 });
@@ -55,6 +55,9 @@ client.droplets.delete(123, callback);
 client.droplets.powerOff(123, callback);
 client.droplets.getAction(123, 456, callback);
 ```
+
+For (potentialy) long-running updates or changes to resources, DigitalOcean's API returns `actions` which are intermediate objects representing a queued job. A request can have successful or errored results, and then the outcome of the job can also be successful or errored. Since, in most cases, the desired outcome is to work on the finished object, when an `action` is returned, the client handles the intermediate object and returns only the final the final success or error state.
+
 ## Client Options
 
 The DigitalOcean client depends on [`request`](https://github.com/request/request), and [options can be passed through](https://github.com/request/request#requestoptions-callback) (e.g. a proxy or user agent).
