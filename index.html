@@ -250,6 +250,29 @@ client.droplets</code></pre><ul>
 <li><code>client.droplets.restore(droplet.id, parametersOrImageId, [callback])</code></li>
 <li><code>client.droplets.resize(droplet.id, parametersOrSizeSlug, [callback])</code></li>
 </ul>
+<h3>Drive resource</h3><pre class="prettyprint source lang-js"><code>var digitalocean = require('digitalocean');
+var client = digitalocean.client('TOKEN');
+client.drives</code></pre><ul>
+<li><code>client.drives.list([page, perPage,] [callback])</code></li>
+<li><code>client.drives.list([queryObject] [callback])</code></li>
+</ul>
+<p><a href="https://developers.digitalocean.com/documentation/v2/block-storage-beta/#retrieve-an-existing-block-storage-drive-by-name">See the official docs</a> on different parameters to pass via the query object to filter the drives.</p>
+<ul>
+<li><code>client.drives.get(tag.name, [callback])</code></li>
+<li><code>client.drives.create(attributes, [callback])</code></li>
+</ul>
+<p>For the latest valid attributes, <a href="https://developers.digitalocean.com/documentation/v2/block-storage-beta/#create-a-new-block-storage-drive">see the official docs</a>.</p>
+<ul>
+<li><code>client.drives.delete(tag.name, [callback])</code></li>
+</ul>
+<p>Methods resulting in an <code>action</code>:</p>
+<ul>
+<li><code>client.drives.attach(drive.id, parametersOrDropletId, [callback])</code></li>
+<li><code>client.drives.detach(drive.id, [callback])</code></li>
+<li><code>client.drives.listActions(drive.id, [page, perPage,] [callback])</code></li>
+<li><code>client.drives.listActions(drive.id, [queryObject] [callback])</code></li>
+<li><code>client.drives.getAction(drive.id, action.id, [callback])</code></li>
+</ul>
 <h3>Domain resource</h3><pre class="prettyprint source lang-js"><code>var digitalocean = require('digitalocean');
 var client = digitalocean.client('TOKEN');
 client.domains</code></pre><ul>
@@ -324,8 +347,27 @@ client.floatingIps</code></pre><ul>
 <p>For the latest valid attributes, <a href="https://developers.digitalocean.com/documentation/v2/#floating-ips">see the official docs</a>.</p>
 <p>Methods resulting in an <code>action</code>:</p>
 <ul>
-<li><code>client.floatingIpActions.assign(floatingIp.ip, parametersOrDropletId, [callback])</code></li>
-<li><code>client.floatingIpActions.unassign(floatingIp.ip, [callback])</code></li>
+<li><code>client.floatingIps.assign(floatingIp.ip, parametersOrDropletId, [callback])</code></li>
+<li><code>client.floatingIps.unassign(floatingIp.ip, [callback])</code></li>
+</ul>
+<h3>Volume resource</h3><pre class="prettyprint source lang-js"><code>var digitalocean = require('digitalocean');
+var client = digitalocean.client('TOKEN');
+client.volumes</code></pre><ul>
+<li><code>client.volumes.list([page, perPage,] [callback])</code></li>
+<li><code>client.volumes.list([queryObject] [callback])</code></li>
+<li><code>client.volumes.get(floatingIp.ip, [callback])</code></li>
+<li><code>client.volumes.create(attributes, [callback])</code></li>
+<li><code>client.volumes.delete(floatingIp.ip, [callback])</code></li>
+<li><code>client.volumes.listActions([page, perPage,] [callback])</code></li>
+<li><code>client.volumes.listActions([queryObject] [callback])</code></li>
+<li><code>client.volumes.getAction(floatingIp.ip, [callback])</code></li>
+</ul>
+<p>For the latest valid attributes, <a href="https://developers.digitalocean.com/documentation/v2/#volumes">see the official docs</a>.</p>
+<p>Methods resulting in an <code>action</code>:</p>
+<ul>
+<li><code>client.volumes.attach(volume.id, parametersOrDropletId, [callback])</code></li>
+<li><code>client.volumes.detach(volume.id, [callback])</code></li>
+<li><code>client.volumes.resize(volume.id, parametersOrSizeGibabytes, region, [callback])</code></li>
 </ul>
 <h3>Tag resource</h3><pre class="prettyprint source lang-js"><code>var digitalocean = require('digitalocean');
 var client = digitalocean.client('TOKEN');
@@ -360,7 +402,7 @@ client.tags</code></pre><ul>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Account.html">Account</a></li><li><a href="Action.html">Action</a></li><li><a href="Domain.html">Domain</a></li><li><a href="Droplet.html">Droplet</a></li><li><a href="FloatingIp.html">FloatingIp</a></li><li><a href="Image.html">Image</a></li><li><a href="Region.html">Region</a></li><li><a href="Size.html">Size</a></li><li><a href="Tag.html">Tag</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Account.html">Account</a></li><li><a href="Action.html">Action</a></li><li><a href="Domain.html">Domain</a></li><li><a href="Droplet.html">Droplet</a></li><li><a href="FloatingIp.html">FloatingIp</a></li><li><a href="Image.html">Image</a></li><li><a href="Region.html">Region</a></li><li><a href="Size.html">Size</a></li><li><a href="Tag.html">Tag</a></li><li><a href="Volume.html">Volume</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
