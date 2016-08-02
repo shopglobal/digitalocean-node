@@ -47,6 +47,7 @@
 
   // Utilities
   var slice = [].slice,
+    util = require('./util'),
     DigitalOceanError = require('./error');
 
   /**
@@ -60,6 +61,7 @@
      * @property {object} [request] - pass in a specific version of the request library.
      * @property {object} [promise] - pass in a specific version of promise library.
      * @property {object} [requestOptions] - a base set of options provided to Request, overridden by options passed to a specific API method. defaults to empty object.
+     * @property {boolean} [decamelizeKeys] - whether to automagically translate query and JSON body keys to use underscore separated names.
      * @property {string} [protocol] - defaults to https.
      * @property {string} [hostname] - defaults to api.digitalocean.com.
      * @property {string} [port] - defaults to protocol default (e.g. with a protocol of https defaults to 443).
@@ -79,6 +81,7 @@
       this.requestOptions = this.options &amp;&amp; this.options.requestOptions || {};
       this.request = this.options &amp;&amp; this.options.request || request;
       this.promise = this.options &amp;&amp; this.options.promise || Promise;
+      this.decamelizeKeys = this.options ? this.options.decamelizeKeys : true;
 
       var version = require('../../package.json').version;
       this.requestDefaults = {
@@ -114,6 +117,10 @@
       }
 
       var urlFromPath = url.parse(this.version + path);
+
+      if (!!this.decamelizeKeys) {
+        urlParams = util.decamelizeKeys(urlParams);
+      }
 
       return url.format({
         protocol: urlFromPath.protocol || this.options &amp;&amp; this.options.protocol || "https:",
@@ -292,6 +299,10 @@
         successRootKeys = successStatuses;
         successStatuses = options;
         options = {};
+      }
+
+      if (!!this.decamelizeKeys) {
+        content = util.decamelizeKeys(content);
       }
 
       return this._callbackOrPromise(
